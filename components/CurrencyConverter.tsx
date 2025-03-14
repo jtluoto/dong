@@ -71,7 +71,7 @@ const CurrencyConverter = () => {
         <form onSubmit={handleSubmit} className="relative">
           {/* Mini flag in corner */}
           
-          <div className={`absolute -top-1 right-1 w-6 h-4 rounded-sm flex items-center justify-center ${activeMode === "vnd-to-eur" ? "bg-[#da251d]" : "bg-[blue]"}`}>
+          <div className={`absolute -top-1 right-1 w-6 h-4 rounded-sm flex items-center justify-center ${activeMode === "vnd-to-eur" ? "bg-[#da251d]" : "bg-[#003399]"}`}>
             <div className="w-2 h-2 star-shape bg-[#ffcd00]"></div>
           </div>
 

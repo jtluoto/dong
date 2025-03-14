@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const CurrencyConverter = () => {
   const [amount, setAmount] = useState<string>("");
@@ -9,9 +9,8 @@ const CurrencyConverter = () => {
   // Current approximate exchange rate (as of 2023)
   // 1 EUR ≈ 25,500 VND
   const EUR_TO_VND_RATE = 25500;
-  
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+
+  const convertCurrency = () => {
     if (!amount) return;
     
     if (activeMode === "vnd-to-eur") {
@@ -23,6 +22,15 @@ const CurrencyConverter = () => {
       const vndAmount = eurAmount * EUR_TO_VND_RATE;
       setResult(`${vndAmount.toLocaleString()} VND`);
     }
+  };
+
+  useEffect(() => {
+    convertCurrency();
+  }, [activeMode]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    convertCurrency();
   };
   
   return (

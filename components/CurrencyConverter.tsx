@@ -17,11 +17,11 @@ const CurrencyConverter = () => {
     if (activeMode === "vnd-to-eur") {
       const vndAmount = parseFloat(amount);
       const eurAmount = vndAmount / EUR_TO_VND_RATE;
-      setResult(`${vndAmount.toLocaleString()} VND = ${eurAmount.toFixed(2)} EUR`);
+      setResult(`${eurAmount.toFixed(2)} EUR`);
     } else {
       const eurAmount = parseFloat(amount);
       const vndAmount = eurAmount * EUR_TO_VND_RATE;
-      setResult(`${eurAmount.toFixed(2)} EUR = ${vndAmount.toLocaleString()} VND`);
+      setResult(`${vndAmount.toLocaleString()} VND`);
     }
   };
   
@@ -43,7 +43,7 @@ const CurrencyConverter = () => {
             }`}
             type="button"
           >
-            VND to EUR
+            Dong to Euro
             
             {activeMode === "vnd-to-eur" && (
               <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-3 h-3 bg-white rotate-45 border-b border-r border-[#da251d]"></span>
@@ -70,13 +70,14 @@ const CurrencyConverter = () => {
         {/* Converter form */}
         <form onSubmit={handleSubmit} className="relative">
           {/* Mini flag in corner */}
-          <div className="absolute -top-1 right-1 w-6 h-4 bg-[#da251d] rounded-sm flex items-center justify-center">
+          
+          <div className={`absolute -top-1 right-1 w-6 h-4 rounded-sm flex items-center justify-center ${activeMode === "vnd-to-eur" ? "bg-[#da251d]" : "bg-[blue]"}`}>
             <div className="w-2 h-2 star-shape bg-[#ffcd00]"></div>
           </div>
-          
+
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Enter {activeMode === "vnd-to-eur" ? "VND" : "EUR"} Amount
+              Enter {activeMode === "vnd-to-eur" ? "Dong" : "Euro"} Amount
             </label>
             
             <div className="relative">
@@ -97,11 +98,12 @@ const CurrencyConverter = () => {
           </div>
           
           {/* Convert button */}
+          
           <button
             type="submit"
             className="w-full bg-[#da251d] hover:bg-[#b01e18] text-white py-3 px-4 rounded-lg font-medium transition-colors relative overflow-hidden group"
           >
-            <span className="relative z-10">Convert</span>
+            <span className="relative z-10">{activeMode === "vnd-to-eur" ? "Dong it!" : "Euro it!"}</span>
             
             {/* Star appears on hover */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
@@ -116,7 +118,6 @@ const CurrencyConverter = () => {
             <div className="bg-gray-50 rounded-lg p-6 relative overflow-hidden">
               {/* Result with styled currency symbols */}
               <div className="text-center mb-1">
-                <p className="text-sm text-gray-500 mb-1">Conversion Result</p>
                 <p className="text-xl font-medium text-gray-900">{result}</p>
               </div>
               

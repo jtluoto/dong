@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VND ↔ EUR Converter | Modern Vietnamese Design",
+  title: "Euro Dong",
   description: "Convert between Vietnamese Dong (VND) and Euro (EUR) with our stylish Vietnam-inspired currency converter",
 };
 
@@ -29,13 +29,9 @@ export default function RootLayout({
           {/* Main background - subtle red pattern */}
           <div className="absolute inset-0 bg-[#da251d] opacity-[0.03]"></div>
           
-          {/* Large star in center */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 opacity-[0.04] animate-spin-slow">
-            <div className="w-full h-full star-shape bg-[#da251d]"></div>
-          </div>
           
           {/* Decorative elements */}
-          <div className="absolute bottom-0 right-0 w-72 h-72 opacity-[0.07]">
+          <div className="absolute bottom-0 right-0 w-72 h-72 opacity-[0.3] animate-spin-slow">
             <div className="w-full h-full star-shape bg-[#ffcd00]"></div>
           </div>
           

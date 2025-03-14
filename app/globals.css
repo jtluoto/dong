@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
 :root {
+  /* Base colors */
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Vietnamese flag colors */
+  --vn-red: #da251d;
+  --vn-red-dark: #b01e18;
+  --vn-yellow: #ffcd00;
+  --vn-yellow-light: #ffe066;
 }
 
 @theme inline {
@@ -22,5 +29,125 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans, Arial, sans-serif);
+  overflow-x: hidden;
+}
+
+/* Star shape */
+.star-shape {
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0.6; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes flag-wave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes pulse-shadow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(218, 37, 29, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(218, 37, 29, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(218, 37, 29, 0);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 12s linear infinite;
+}
+
+.animate-pulse-custom {
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.03);
+}
+
+.hover\:scale-102:hover {
+  transform: scale(1.02);
+}
+
+.flag-gradient {
+  background: linear-gradient(90deg, var(--vn-red), var(--vn-yellow), var(--vn-red));
+  background-size: 200% 200%;
+  animation: flag-wave 5s ease infinite;
+}
+
+.flag-pulse {
+  animation: pulse-shadow 2s infinite;
+}
+
+/* Red gradient with texture */
+.vn-red-gradient {
+  background: linear-gradient(135deg, var(--vn-red) 0%, var(--vn-red-dark) 100%);
+  position: relative;
+}
+
+.vn-red-gradient::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+  opacity: 0.1;
+}
+
+/* Custom container styles */
+.container-custom {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }

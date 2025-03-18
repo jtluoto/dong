@@ -44,6 +44,7 @@ const CurrencyConverter = () => {
         {/* Mode selection tabs */}
         <div className="flex mb-8 border-b border-gray-200">
           <button
+            id="vnd-to-eur-button"
             onClick={() => setActiveMode("vnd-to-eur")}
             className={`flex-1 pb-3 pt-1 relative font-medium text-center ${
               activeMode === "vnd-to-eur"
@@ -60,6 +61,7 @@ const CurrencyConverter = () => {
           </button>
           
           <button
+            id="eur-to-vnd-button"
             onClick={() => setActiveMode("eur-to-vnd")}
             className={`flex-1 pb-3 pt-1 relative font-medium text-center ${
               activeMode === "eur-to-vnd"
@@ -114,6 +116,7 @@ const CurrencyConverter = () => {
           {/* Convert button */}
           
           <button
+            id="convert-button"
             type="submit"
             className="w-full bg-[#da251d] hover:bg-[#b01e18] text-white py-3 px-4 rounded-lg font-medium transition-colors relative overflow-hidden group"
           >
@@ -132,7 +135,7 @@ const CurrencyConverter = () => {
             <div className="bg-gray-50 rounded-lg p-6 relative overflow-hidden">
               {/* Result with styled currency symbols */}
               <div className="text-center mb-1">
-                <p className="text-xl font-medium text-gray-900">{result}</p>
+                <p id="result" className="text-xl font-medium text-gray-900">{result}</p>
               </div>
               
               {/* Exchange rate info */}

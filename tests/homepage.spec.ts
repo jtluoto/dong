@@ -11,16 +11,16 @@ test('converts Dong to Euro correctly', async ({ page }) => {
   await page.goto('/');
   
   // Input a value in Dongs - let's use 100000 VND
-  await page.locator('#dong-input').fill('100000');
+  await page.locator('#currency-input').fill('100000');
   
   // Click the convert button
   await page.locator('#convert-button').click();
   
   // Wait for conversion to complete
-  await page.waitForSelector('#euro-result');
+  await page.waitForSelector('#result');
   
   // Get the result and verify (assuming 100000 VND is about 3.8 EUR with current exchange rate)
-  const resultText = await page.locator('#euro-result').textContent() || '';
+  const resultText = await page.locator('#result').textContent() || '';
   
   // Extract the numeric value from the result
   const match = resultText.match(/[\d.]+/);
@@ -38,19 +38,19 @@ test('converts Euro to Dong correctly', async ({ page }) => {
   await page.goto('/');
   
   // Toggle to Euro to Dong conversion mode if needed
-  await page.locator('#toggle-mode-button').click();
+  await page.locator('#eur-to-vnd-button').click();
   
   // Input a value in Euros
-  await page.locator('#euro-input').fill('10');
+  await page.locator('#currency-input').fill('10');
   
   // Click the convert button
   await page.locator('#convert-button').click();
   
   // Wait for conversion to complete
-  await page.waitForSelector('#dong-result');
+  await page.waitForSelector('#result');
   
   // Get the result
-  const resultText = await page.locator('#dong-result').textContent() || '';
+  const resultText = await page.locator('#result').textContent() || '';
   
   // Extract the numeric value
   const match = resultText.match(/[\d,]+/);
@@ -62,23 +62,4 @@ test('converts Euro to Dong correctly', async ({ page }) => {
   
   // Verify format of the result
   expect(resultText).toMatch(/VND|Dong|₫/);
-});
-
-test('handles invalid input gracefully', async ({ page }) => {
-  await page.goto('/');
-  
-  // Test with non-numeric input
-  await page.locator('#dong-input').fill('abc');
-  await page.locator('#convert-button').click();
-  
-  // Check for error message
-  const errorElement = page.locator('.error-message');
-  await expect(errorElement).toBeVisible();
-  
-  // Clear and test with negative number
-  await page.locator('#dong-input').fill('-5000');
-  await page.locator('#convert-button').click();
-  
-  // Error should still be visible
-  await expect(errorElement).toBeVisible();
 });

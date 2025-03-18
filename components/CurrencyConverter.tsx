@@ -179,7 +179,7 @@ const CurrencyConverter = () => {
 
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Enter {activeMode === "vnd-to-eur" ? "Dong" : "Euro"} Amount
+              Enter amount in {activeMode === "vnd-to-eur" ? "Dong" : "Euro"}
             </label>
             
             <div className="relative">
@@ -212,7 +212,7 @@ const CurrencyConverter = () => {
             disabled={isLoading}
           >
             <span className="relative z-10">
-              {isLoading ? "Getting latest rates..." : (activeMode === "vnd-to-eur" ? "Dong it!" : "Euro it!")}
+              {isLoading ? "Getting latest rates..." : (activeMode === "vnd-to-eur" ? "Euro it!" : "Dong it!")}
             </span>
             
             {/* Star appears on hover */}

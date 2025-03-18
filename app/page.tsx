@@ -9,8 +9,11 @@ function InstallPrompt() {
   const [isStandalone, setIsStandalone] = useState(false)
  
   useEffect(() => {
+    // More reliable iOS detection without relying on MSStream
     setIsIOS(
-      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && 
+      !navigator.userAgent.includes('Windows') &&
+      !navigator.userAgent.includes('Android')
     )
  
     setIsStandalone(window.matchMedia('(display-mode: standalone)').matches)
@@ -31,7 +34,7 @@ function InstallPrompt() {
             {' '}
             ⎋{' '}
           </span>
-          and then "Add to Home Screen"
+          and then &quot;Add to Home Screen&quot;
           <span role="img" aria-label="plus icon">
             {' '}
             ➕{' '}
@@ -70,8 +73,6 @@ export default function Home() {
                 Euro ↔ Dong<br/><span className="text-[#ffcd00]">Converter</span>
               </h1>
             </div>
-            
-
           </div>
         </div>
       </header>

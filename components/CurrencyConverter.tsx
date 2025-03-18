@@ -1,20 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 
-// Register service worker
-if (typeof window !== "undefined" && "serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("/service-worker.js")
-      .then((registration) => {
-        console.log("ServiceWorker registration successful with scope: ", registration.scope);
-      })
-      .catch((error) => {
-        console.log("ServiceWorker registration failed: ", error);
-      });
-  });
-}
-
 const CurrencyConverter = () => {
   const [amount, setAmount] = useState<string>("");
   const [result, setResult] = useState<string | null>(null);

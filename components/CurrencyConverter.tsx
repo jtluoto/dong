@@ -179,7 +179,7 @@ const CurrencyConverter = () => {
 
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Enter amount in {activeMode === "vnd-to-eur" ? "Dong" : "Euro"}
+              Enter amount
             </label>
             
             <div className="relative">
@@ -189,7 +189,7 @@ const CurrencyConverter = () => {
                 value={amount}
                 onValueChange={(value) => setAmount(value || "")}
                 className="w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-lg focus:border-[#da251d] focus:outline-none transition-colors"
-                placeholder={`Enter ${activeMode === "vnd-to-eur" ? "Vietnamese Dong" : "Euro"} amount`}
+                placeholder={`Amount in ${activeMode === "vnd-to-eur" ? "Dong" : "Euro"}`}
                 decimalsLimit={activeMode === "vnd-to-eur" ? 0 : 2}
                 groupSeparator=","
                 decimalSeparator="."

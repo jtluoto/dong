@@ -1,5 +1,4 @@
 import CurrencyConverter from "../components/CurrencyConverter";
-import { useState, useEffect } from 'react'
 
 export default function Home() {
   return (

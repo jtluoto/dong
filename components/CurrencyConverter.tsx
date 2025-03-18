@@ -233,7 +233,7 @@ const CurrencyConverter = () => {
               
               {/* Exchange rate info */}
               <div className="mt-4 pt-4 border-t border-gray-200 flex justify-center">
-                <div className="bg-white px-3 py-1 rounded-full text-xs text-[#da251d] border border-[#da251d]/20">
+                <div className="bg-white px-3 py-1 rounded-full text-xs text-[#da251d] border border-[#da251d]/20 text-center">
                   Current rate: 1 EUR ≈ {exchangeRate.toLocaleString()} VND
                 </div>
               </div>

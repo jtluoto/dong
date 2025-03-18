@@ -4,13 +4,6 @@ A simple currency conversion application built with Next.js that allows users to
 
 http://dong.juhaluoto.net
 
-## Features
-
-- Real-time currency conversion
-- Progressive Web App (PWA) capabilities
-- Responsive design
-- Offline functionality
-
 ## Getting Started
 
 ```bash
@@ -25,4 +18,4 @@ This project uses:
 - Next.js for the framework
 - TypeScript for type safety
 - PWA capabilities for offline use
-- Geist font through next/font
+- Playwright unit tests

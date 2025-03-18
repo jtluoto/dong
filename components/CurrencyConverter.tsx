@@ -2,31 +2,122 @@
 import { useState, useEffect } from "react";
 import CurrencyInput from 'react-currency-input-field';
 
+// API URL for currency rates
+const CURRENCY_API_URL = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@2025-03-16/v1/currencies/eur.json";
+// Default exchange rate if API fails
+const DEFAULT_EXCHANGE_RATE = 27700;
+// Cache key for local storage
+const CACHE_KEY = "eurVndExchangeRate";
+// Cache expiry key
+const CACHE_EXPIRY_KEY = "eurVndExchangeRateExpiry";
+// Cache duration in milliseconds (2 days)
+const CACHE_DURATION = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
+// Timeout for API call in milliseconds (10 seconds)
+const API_TIMEOUT = 10000;
+
 const CurrencyConverter = () => {
   const [amount, setAmount] = useState<string>("");
   const [result, setResult] = useState<string | null>(null);
   const [activeMode, setActiveMode] = useState<"vnd-to-eur" | "eur-to-vnd">("vnd-to-eur");
+  const [exchangeRate, setExchangeRate] = useState<number>(DEFAULT_EXCHANGE_RATE);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   
-  // Current approximate exchange rate (as of 2023)
-  // 1 EUR ≈ 25,500 VND
-  const EUR_TO_VND_RATE = 25500;
+  // Function to fetch exchange rate with timeout
+  const fetchExchangeRate = async (): Promise<number> => {
+    setIsLoading(true);
+    
+    try {
+      // Create a promise that rejects after timeout
+      const timeoutPromise = new Promise<Response>((_, reject) => {
+        setTimeout(() => reject(new Error('Request timed out')), API_TIMEOUT);
+      });
+      
+      // Race the fetch against the timeout
+      const response = await Promise.race([
+        fetch(CURRENCY_API_URL),
+        timeoutPromise
+      ]) as Response;
+      
+      if (!response.ok) {
+        throw new Error(`API responded with status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      // Check if VND exists in the returned data
+      if (data?.eur?.vnd) {
+        const rate = Number(data.eur.vnd);
+        
+        // Store in cache with expiry time
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(CACHE_KEY, rate.toString());
+          localStorage.setItem(CACHE_EXPIRY_KEY, (Date.now() + CACHE_DURATION).toString());
+        }
+        
+        return rate;
+      } else {
+        throw new Error('VND exchange rate not found in API response');
+      }
+    } catch (error) {
+      console.error('Error fetching exchange rate:', error);
+      
+      // Return cached value if available and not expired
+      if (typeof window !== 'undefined') {
+        const cachedRate = localStorage.getItem(CACHE_KEY);
+        const expiryTime = localStorage.getItem(CACHE_EXPIRY_KEY);
+        
+        if (cachedRate && expiryTime && Number(expiryTime) > Date.now()) {
+          return Number(cachedRate);
+        }
+      }
+      
+      // Fall back to default rate
+      return DEFAULT_EXCHANGE_RATE;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  // Check for cached exchange rate on initial load
+  useEffect(() => {
+    const loadCachedRate = () => {
+      if (typeof window !== 'undefined') {
+        const cachedRate = localStorage.getItem(CACHE_KEY);
+        const expiryTime = localStorage.getItem(CACHE_EXPIRY_KEY);
+        
+        if (cachedRate && expiryTime && Number(expiryTime) > Date.now()) {
+          setExchangeRate(Number(cachedRate));
+        }
+      }
+    };
+    
+    loadCachedRate();
+  }, []);
 
-  const convertCurrency = () => {
+  const convertCurrency = async () => {
     if (!amount) return;
+    
+    // Get the latest exchange rate when converting
+    const rate = await fetchExchangeRate();
+    setExchangeRate(rate);
     
     if (activeMode === "vnd-to-eur") {
       const vndAmount = parseFloat(amount.replace(/,/g, ''));
-      const eurAmount = vndAmount / EUR_TO_VND_RATE;
+      const eurAmount = vndAmount / rate;
       setResult(`${eurAmount.toFixed(2)} EUR`);
     } else {
       const eurAmount = parseFloat(amount.replace(/,/g, ''));
-      const vndAmount = eurAmount * EUR_TO_VND_RATE;
+      // Round up to the nearest whole VND amount
+      const vndAmount = Math.ceil(eurAmount * rate);
+      // Format without decimal places
       setResult(`${vndAmount.toLocaleString()} VND`);
     }
   };
 
   useEffect(() => {
-    convertCurrency();
+    if (amount) {
+      convertCurrency();
+    }
   }, [activeMode]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -98,7 +189,7 @@ const CurrencyConverter = () => {
                 value={amount}
                 onValueChange={(value) => setAmount(value || "")}
                 className="w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-lg focus:border-[#da251d] focus:outline-none transition-colors"
-                placeholder={`Enter amount in ${activeMode === "vnd-to-eur" ? "Dong" : "Euro"}`}
+                placeholder={`Enter ${activeMode === "vnd-to-eur" ? "Vietnamese Dong" : "Euro"} amount`}
                 decimalsLimit={activeMode === "vnd-to-eur" ? 0 : 2}
                 groupSeparator=","
                 decimalSeparator="."
@@ -114,13 +205,15 @@ const CurrencyConverter = () => {
           </div>
           
           {/* Convert button */}
-          
           <button
             id="convert-button"
             type="submit"
             className="w-full bg-[#da251d] hover:bg-[#b01e18] text-white py-3 px-4 rounded-lg font-medium transition-colors relative overflow-hidden group"
+            disabled={isLoading}
           >
-            <span className="relative z-10">{activeMode === "vnd-to-eur" ? "Euro it!" : "Dong it!"}</span>
+            <span className="relative z-10">
+              {isLoading ? "Getting latest rates..." : (activeMode === "vnd-to-eur" ? "Dong it!" : "Euro it!")}
+            </span>
             
             {/* Star appears on hover */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
@@ -141,7 +234,7 @@ const CurrencyConverter = () => {
               {/* Exchange rate info */}
               <div className="mt-4 pt-4 border-t border-gray-200 flex justify-center">
                 <div className="bg-white px-3 py-1 rounded-full text-xs text-[#da251d] border border-[#da251d]/20">
-                  Current rate: 1 EUR ≈ 25,500 VND
+                  Current rate: 1 EUR ≈ {exchangeRate.toLocaleString()} VND
                 </div>
               </div>
               

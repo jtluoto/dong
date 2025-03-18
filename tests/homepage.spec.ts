@@ -1,6 +1,25 @@
 import { test, expect } from '@playwright/test';
 import { fail } from 'assert';
 
+// Mock API response
+const mockExchangeRateResponse = {
+  date: "2023-06-10",
+  eur: {
+    vnd: 25000 // Fixed exchange rate for testing
+  }
+};
+
+test.beforeEach(async ({ page }) => {
+  // Mock the currency API response
+  await page.route('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@2025-03-16/v1/currencies/eur.json', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(mockExchangeRateResponse)
+    });
+  });
+});
+
 test('homepage has title', async ({ page }) => {
   await page.goto('/');
   await expect(page).toHaveTitle(/Euro Dong/);
@@ -19,7 +38,7 @@ test('converts Dong to Euro correctly', async ({ page }) => {
   // Wait for conversion to complete
   await page.waitForSelector('#result');
   
-  // Get the result and verify (assuming 100000 VND is about 3.8 EUR with current exchange rate)
+  // Get the result and verify (using our mocked exchange rate)
   const resultText = await page.locator('#result').textContent() || '';
   
   // Extract the numeric value from the result
@@ -27,8 +46,8 @@ test('converts Dong to Euro correctly', async ({ page }) => {
   expect(match).not.toBeNull();
   const euroValue = parseFloat(match?.[0] || '0');
   
-  // Check if the result is close to expected value (with some tolerance for rate changes)
-  expect(euroValue).toBeGreaterThan(0);
+  // With our mocked rate of 25000, 100000 VND should be 4 EUR
+  expect(euroValue).toBeCloseTo(4, 1);
   
   // Verify format/display of the result
   expect(resultText).toMatch(/€|EUR|Euro/);
@@ -57,8 +76,8 @@ test('converts Euro to Dong correctly', async ({ page }) => {
   expect(match).not.toBeNull();
   const dongValue = parseFloat((match?.[0] || '0').replace(/,/g, ''));
   
-  // Verify the result is reasonable
-  expect(dongValue).toBeGreaterThan(100000);
+  // With our mocked rate of 25000, 10 EUR should be 250000 VND
+  expect(dongValue).toBe(250000);
   
   // Verify format of the result
   expect(resultText).toMatch(/VND|Dong|₫/);

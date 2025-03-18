@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import CurrencyInput from 'react-currency-input-field';
 
 const CurrencyConverter = () => {
   const [amount, setAmount] = useState<string>("");
@@ -14,11 +15,11 @@ const CurrencyConverter = () => {
     if (!amount) return;
     
     if (activeMode === "vnd-to-eur") {
-      const vndAmount = parseFloat(amount);
+      const vndAmount = parseFloat(amount.replace(/,/g, ''));
       const eurAmount = vndAmount / EUR_TO_VND_RATE;
       setResult(`${eurAmount.toFixed(2)} EUR`);
     } else {
-      const eurAmount = parseFloat(amount);
+      const eurAmount = parseFloat(amount.replace(/,/g, ''));
       const vndAmount = eurAmount * EUR_TO_VND_RATE;
       setResult(`${vndAmount.toLocaleString()} VND`);
     }
@@ -89,12 +90,17 @@ const CurrencyConverter = () => {
             </label>
             
             <div className="relative">
-              <input
-                type="number"
+              <CurrencyInput
+                id="currency-input"
+                name="currency-input"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onValueChange={(value) => setAmount(value || "")}
                 className="w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-lg focus:border-[#da251d] focus:outline-none transition-colors"
                 placeholder={`Enter ${activeMode === "vnd-to-eur" ? "Vietnamese Dong" : "Euro"} amount`}
+                decimalsLimit={activeMode === "vnd-to-eur" ? 0 : 2}
+                groupSeparator=","
+                decimalSeparator="."
+                disableAbbreviations={true}
               />
               
               <div className="absolute right-0 inset-y-0 flex items-center pr-3 pointer-events-none">
@@ -111,7 +117,7 @@ const CurrencyConverter = () => {
             type="submit"
             className="w-full bg-[#da251d] hover:bg-[#b01e18] text-white py-3 px-4 rounded-lg font-medium transition-colors relative overflow-hidden group"
           >
-            <span className="relative z-10">{activeMode === "vnd-to-eur" ? "Dong it!" : "Euro it!"}</span>
+            <span className="relative z-10">{activeMode === "vnd-to-eur" ? "Euro it!" : "Dong it!"}</span>
             
             {/* Star appears on hover */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 opacity-0 group-hover:opacity-10 transition-opacity duration-300">

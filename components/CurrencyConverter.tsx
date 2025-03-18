@@ -98,7 +98,7 @@ const CurrencyConverter = () => {
                 value={amount}
                 onValueChange={(value) => setAmount(value || "")}
                 className="w-full px-4 py-3 pr-12 border-2 border-gray-200 rounded-lg focus:border-[#da251d] focus:outline-none transition-colors"
-                placeholder={`Enter ${activeMode === "vnd-to-eur" ? "Vietnamese Dong" : "Euro"} amount`}
+                placeholder={`Enter amount in ${activeMode === "vnd-to-eur" ? "Dong" : "Euro"}`}
                 decimalsLimit={activeMode === "vnd-to-eur" ? 0 : 2}
                 groupSeparator=","
                 decimalSeparator="."

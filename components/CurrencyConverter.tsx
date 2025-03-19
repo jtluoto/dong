@@ -161,7 +161,7 @@ const CurrencyConverter = () => {
             }`}
             type="button"
           >
-            EUR to VND
+            Euro to Dong
             
             {activeMode === "eur-to-vnd" && (
               <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-3 h-3 bg-white rotate-45 border-b border-r border-[#da251d]"></span>
@@ -179,7 +179,7 @@ const CurrencyConverter = () => {
 
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Enter amount
+              Enter the amount
             </label>
             
             <div className="relative">
@@ -197,7 +197,7 @@ const CurrencyConverter = () => {
               />
               
               <div className="absolute right-0 inset-y-0 flex items-center pr-3 pointer-events-none">
-                <span className="text-gray-500 font-medium">
+                <span className={`text-gray-500 font-medium ${activeMode === "vnd-to-eur" ? "text-2xl" : "text-1xl"}`}>
                   {activeMode === "vnd-to-eur" ? "₫" : "€"}
                 </span>
               </div>
